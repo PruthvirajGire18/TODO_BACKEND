@@ -13,7 +13,12 @@ const TaskSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now
-  }
+  },
+   user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User", // 👈 User model ka reference
+    required: true,
+  },
 });
 
 module.exports = mongoose.model("Task", TaskSchema);

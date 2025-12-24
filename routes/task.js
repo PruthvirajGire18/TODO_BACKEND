@@ -1,12 +1,13 @@
 const express = require("express");
 const Task = require("../models/task.js"); // ✅ Capitalize model name
+const User=require("../models/user.js")
 const router = express.Router();
 
 // ADD a new task
 router.post("/add-task", async (req, res) => {
   try {
-    const { task } = req.body; // ✅ get "task" text from frontend
-    const newTask = new Task({ task }); // ✅ use model "Task"
+    const { task,userId } = req.body; // ✅ get "task" text from frontend
+    const newTask = new Task({ task,id:userId }); // ✅ use model "Task"
     await newTask.save();
     res.status(201).json({ message: "✅ Task added successfully" });
   } catch (error) {
@@ -15,9 +16,10 @@ router.post("/add-task", async (req, res) => {
 });
 
 // GET all tasks
-router.get("/get-tasks", async (req, res) => {
+router.get("/get-tasks/:userId", async (req, res) => {
   try {
-    const tasks = await Task.find(); // ✅ use correct model name
+    const userId = req.params.userId;
+    const tasks = await Task.find({user:userId}); // ✅ use correct model name
     res.status(200).json(tasks);
   } catch (error) {
     res.status(500).json({ message: error.message });
