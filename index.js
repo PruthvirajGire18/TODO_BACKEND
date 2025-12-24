@@ -13,12 +13,14 @@ dotenv.config();
 connectDB();
 app.use(express.json());
 app.use(cookieParser());
-app.use(
-  cors({
-    origin: "https://taskify18.netlify.app/", // ⚠️ frontend ka exact URL likh
-    credentials: true, // ✅ cookies allow karne ke liye
-  })
-);
+app.use(cors({
+  origin: [
+    "http://localhost:5173",
+    "https://taskify18.netlify.app"
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
+}));
 app.use("/api/auth", authRoutes);
 app.use("/api/task",taskRoute); 
 
