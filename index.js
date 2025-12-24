@@ -1,32 +1,33 @@
-const express=require("express");
-const app=express();
+const express = require("express");
 const mongoose = require("mongoose");
-const cookieParser = require("cookie-parser");
-const dotenv = require("dotenv");
-const authRoutes = require("./routes/auth.js");
-const taskRoute = require("./routes/task.js")
-const connectDB = require("./config/db.js");
-const cors=require("cors")
+const cors = require("cors");
+require("dotenv").config();
 
+const taskRoutes = require("./routes/task");
+const authRoutes = require("./routes/auth");
 
-dotenv.config();
-connectDB();
+const app = express();
+
 app.use(express.json());
-app.use(cookieParser());
-app.use(cors({
-  origin: [
-    "http://localhost:5173",
-    "https://taskify18.netlify.app"
-  ],
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true
-}));
+
+app.use(
+  cors({
+    origin: ["http://localhost:5173", "https://taskify18.netlify.app"],
+    credentials: true,
+  })
+);
+
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => console.log("MongoDB Connected"))
+  .catch((err) => console.log(err));
+
+app.use("/api/task", taskRoutes);
 app.use("/api/auth", authRoutes);
-app.use("/api/task",taskRoute); 
 
-app.get("/",(req,res)=>{
-    res.send("backend is running");
-})
+app.get("/", (req, res) => {
+  res.send("Backend running");
+});
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+// 🔥 VERY IMPORTANT
+module.exports = app;
