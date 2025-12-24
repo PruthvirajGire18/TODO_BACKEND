@@ -16,7 +16,7 @@ router.post("/add-task", async (req, res) => {
 });
 
 // GET all tasks
-router.get("/get-tasks/:userId", async (req, res) => {
+router.get("/get-tasks", async (req, res) => {
   try {
     const userId = req.params.userId;
     const tasks = await Task.find({user:userId}); // ✅ use correct model name
